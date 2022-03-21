@@ -105,3 +105,5 @@ Externals/glitchConfig/resource_cache/
 
 # Generated files for VS for mac
 *_noImportSdk.csproj
+
+obj/*
