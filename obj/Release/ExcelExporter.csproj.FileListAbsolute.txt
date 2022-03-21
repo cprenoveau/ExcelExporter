@@ -1,0 +1,8 @@
+D:\Daydream2\ExcelExporter\obj\Release\ExcelExporter.csproj.AssemblyReference.cache
+D:\Daydream2\ExcelExporter\obj\Release\ExcelExporter.csproj.CoreCompileInputs.cache
+D:\Daydream2\ExcelExporter.exe.config
+D:\Daydream2\ExcelExporter\obj\Release\ExcelExporter.exe
+D:\Daydream2\ExcelExporter\obj\Release\ExcelExporter.pdb
+D:\Daydream2\ExcelExporter.exe
+D:\Daydream2\ExcelExporter.pdb
+D:\Daydream2\ExcelExporter\obj\Release\ExcelExporter.csproj.CopyComplete
