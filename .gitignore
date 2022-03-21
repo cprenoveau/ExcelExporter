@@ -107,3 +107,4 @@ Externals/glitchConfig/resource_cache/
 *_noImportSdk.csproj
 
 obj/*
+bin/*
