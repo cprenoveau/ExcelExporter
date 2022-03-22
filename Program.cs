@@ -71,7 +71,7 @@ namespace ExcelExporter
                     string label = (range.Cells[1, c] as Excel.Range).Value;
                     var value = (range.Cells[r, c] as Excel.Range).Value;
 
-                    if (label[0] == '*')
+                    if (string.IsNullOrEmpty(label) || label[0] == '*')
                         continue;
 
                     var tokens = label.Split(':');
