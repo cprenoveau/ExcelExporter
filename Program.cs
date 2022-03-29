@@ -29,24 +29,46 @@ namespace ExcelExporter
                     continue;
 
                 string excelFile = Path.GetFileNameWithoutExtension(file.Name);
-                ExportExcelFile(excelApp, file.FullName, Path.Combine(outputPath, excelFile + ".json"));
+                ExportExcelFile(excelApp, file.FullName, excelFile, outputPath);
             }
 
             excelApp.Quit();
         }
 
-        private static void ExportExcelFile(Excel.Application excelApp, string excelFile, string outputPath)
+        private static void ExportExcelFile(Excel.Application excelApp, string fullFileName, string fileName, string outputPath)
         {
             Excel.Workbook book = null;
 
             try
             {
-                Console.WriteLine("Exporting " + excelFile + " to " + outputPath);
+                Console.WriteLine("Exporting " + fullFileName + " to " + outputPath);
 
-                book = excelApp.Workbooks.Open(excelFile);
+                book = excelApp.Workbooks.Open(fullFileName);
                 Excel.Worksheet sheet = book.Worksheets.get_Item(1);
 
-                File.WriteAllText(outputPath, ReadSheet(sheet, book).ToString());
+                var exportAll = ExportAll(sheet);
+                if(exportAll.isTrue)
+                {
+                    if (!string.IsNullOrEmpty(exportAll.folder))
+                    {
+                        outputPath = Path.Combine(outputPath, exportAll.folder);
+                    }
+
+                    if (!Directory.Exists(outputPath))
+                        Directory.CreateDirectory(outputPath);
+
+                    for (int i = 1; i < book.Worksheets.Count; ++i)
+                    {
+                        File.WriteAllText(Path.Combine(outputPath, book.Worksheets[i].Name + ".json"), ReadSheet(book.Worksheets[i], book).ToString());
+                    }
+                }
+                else
+                {
+                    if (!Directory.Exists(outputPath))
+                        Directory.CreateDirectory(outputPath);
+
+                    File.WriteAllText(Path.Combine(outputPath, fileName + ".json"), ReadSheet(sheet, book).ToString());
+                }
             }
             catch (Exception e)
             {
@@ -57,6 +79,12 @@ namespace ExcelExporter
                 book.Close(false);
         }
 
+        private static (bool isTrue, string folder) ExportAll(Excel.Worksheet sheet)
+        {
+            string key = sheet.Cells[1, 1].Value;
+            return (key == "export_all_sheets", sheet.Cells[2,1].Value);
+        }
+
         private static JToken ReadSheet(Excel.Worksheet sheet, Excel.Workbook book)
         {
             JArray jArray = new JArray();
@@ -64,6 +92,9 @@ namespace ExcelExporter
 
             for (int r = 2; r <= range.Rows.Count; ++r)
             {
+                if (range.Cells[r, 1].Value == null)
+                    break;
+
                 JObject dict = new JObject();
 
                 for (int c = 1; c <= range.Columns.Count; ++c)
@@ -71,7 +102,10 @@ namespace ExcelExporter
                     string label = (range.Cells[1, c] as Excel.Range).Value;
                     var value = (range.Cells[r, c] as Excel.Range).Value;
 
-                    if (string.IsNullOrEmpty(label) || label[0] == '*')
+                    if (string.IsNullOrEmpty(label))
+                        break;
+
+                    if (label[0] == '*')
                         continue;
 
                     var tokens = label.Split(':');
