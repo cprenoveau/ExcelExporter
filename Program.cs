@@ -29,6 +29,18 @@ namespace ExcelExporter
                     continue;
 
                 string excelFile = Path.GetFileNameWithoutExtension(file.Name);
+
+                var sizeInBytes = file.Length;
+                var historyFilename = Path.Combine(inputPath, excelFile + "_export.txt");
+                if(File.Exists(historyFilename))
+                {
+                    string content = File.ReadAllText(historyFilename);
+                    if (content == sizeInBytes.ToString())
+                        continue;
+                }
+
+                File.WriteAllText(historyFilename, sizeInBytes.ToString());
+
                 ExportExcelFile(excelApp, file.FullName, excelFile, outputPath);
             }
 
