@@ -5,14 +5,14 @@ Exports .xlsx files from an input folder (arg0) into an output folder in JSON fo
 
 Format looks like this:<br>
 In Excel:<br>
->       key_1,   key_2,   sheet:key_3,   *ignore_me
->       value_1, value_2, my_sheet_name, ignored_value
+>       key_1,   key_2,   key_3,               *ignore_me
+>       value_1, value_2, sheet:my_sheet_name, ignored_value
 >       ...
 
 First row contains keys.<br>
 Subsequent rows contain values.<br>
 
-Adding "sheet:" in front of a key indicates that the values refer to a worksheet name. It will fetch the content of the worksheet and append it as an array. It works recursively, so nested sheets can also contain nested sheets.<br>
+Adding "sheet:" in front of a value refers to a worksheet name. It will fetch the content of the worksheet and append it as an array. It works recursively, so nested sheets can also contain nested sheets.<br>
 Adding \* in front of a key will prevent it from being exported (useful for adding descriptions required only in the Excel document)<br>
 
 Output:<br>
