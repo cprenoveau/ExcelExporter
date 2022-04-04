@@ -71,7 +71,8 @@ namespace ExcelExporter
 
                     for (int i = 1; i < book.Worksheets.Count; ++i)
                     {
-                        File.WriteAllText(Path.Combine(outputPath, book.Worksheets[i].Name + ".json"), ReadSheet(book.Worksheets[i], book).ToString());
+                        if(!SkipExport(book.Worksheets[i]))
+                            File.WriteAllText(Path.Combine(outputPath, book.Worksheets[i].Name + ".json"), ReadSheet(book.Worksheets[i], book).ToString());
                     }
                 }
                 else
@@ -91,6 +92,12 @@ namespace ExcelExporter
                 book.Close(false);
         }
 
+        private static bool SkipExport(Excel.Worksheet sheet)
+        {
+            string key = sheet.Cells[1, 1].Value;
+            return key == "*skip_export";
+        }
+
         private static (bool isTrue, string folder) ExportAll(Excel.Worksheet sheet)
         {
             string key = sheet.Cells[1, 1].Value;
@@ -104,7 +111,7 @@ namespace ExcelExporter
 
             for (int r = 2; r <= range.Rows.Count; ++r)
             {
-                if (range.Cells[r, 1].Value == null)
+                if (range.Cells[r, 1].Value == null && range.Cells[r, 2].Value == null)
                     break;
 
                 JObject dict = new JObject();
@@ -120,11 +127,18 @@ namespace ExcelExporter
                     if (label[0] == '*')
                         continue;
 
-                    var vTokens = value.Split(':');
-                    if (vTokens.Length > 1 && vTokens[0] == "sheet")
+                    if (value is string)
                     {
-                        Excel.Worksheet subSheet = book.Worksheets[vTokens[1]];
-                        dict.Add(label, ReadSheet(subSheet, book));
+                        var vTokens = value.Split(':');
+                        if (vTokens.Length > 1 && vTokens[0] == "sheet")
+                        {
+                            Excel.Worksheet subSheet = book.Worksheets[vTokens[1]];
+                            dict.Add(label, ReadSheet(subSheet, book));
+                        }
+                        else
+                        {
+                            dict.Add(label, value);
+                        }
                     }
                     else
                     {
