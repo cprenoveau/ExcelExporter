@@ -120,11 +120,11 @@ namespace ExcelExporter
                     if (label[0] == '*')
                         continue;
 
-                    var tokens = label.Split(':');
-                    if (tokens.Length > 1 && tokens[0] == "sheet")
+                    var vTokens = value.Split(':');
+                    if (vTokens.Length > 1 && vTokens[0] == "sheet")
                     {
-                        Excel.Worksheet subSheet = book.Worksheets[value];
-                        dict.Add(tokens[1], ReadSheet(subSheet, book));
+                        Excel.Worksheet subSheet = book.Worksheets[vTokens[1]];
+                        dict.Add(label, ReadSheet(subSheet, book));
                     }
                     else
                     {
