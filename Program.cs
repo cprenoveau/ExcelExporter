@@ -69,7 +69,7 @@ namespace ExcelExporter
                     if (!Directory.Exists(outputPath))
                         Directory.CreateDirectory(outputPath);
 
-                    for (int i = 1; i < book.Worksheets.Count; ++i)
+                    for (int i = 2; i <= book.Worksheets.Count; ++i)
                     {
                         if(!SkipExport(book.Worksheets[i]))
                             File.WriteAllText(Path.Combine(outputPath, book.Worksheets[i].Name + ".json"), ReadSheet(book.Worksheets[i], book).ToString());
