@@ -29,6 +29,9 @@ Output:<br>
 >            ...
 >        ]
 
+In order to export all sheets from a document, type export_all_sheets in the first cell of the first sheet and on the second row, type the relative path (relative to outputPath) of the folder you would like your sheets to be exported into.
+If you want to ignore a sheet, type skip_export in the first cell of the sheet you want to ignore.
+
 Usage from within the Unity Editor:<br>
 
         public static void Convert(bool hidden)
