@@ -72,7 +72,7 @@ namespace ExcelExporter
                     for (int i = 2; i <= book.Worksheets.Count; ++i)
                     {
                         if(!SkipExport(book.Worksheets[i]))
-                            File.WriteAllText(Path.Combine(outputPath, book.Worksheets[i].Name + ".json"), ReadSheet(book.Worksheets[i], book).ToString());
+                            File.WriteAllText(Path.Combine(outputPath, fileName + "_" + book.Worksheets[i].Name + ".json"), ReadSheet(book.Worksheets[i], book).ToString());
                     }
                 }
                 else
